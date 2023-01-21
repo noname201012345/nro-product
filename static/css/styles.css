@@ -1,0 +1,22 @@
+body {
+  background-image: url('../../static/img/background.png');
+}
+
+.bs-icon-sm.bs-icon-rounded.bs-icon-primary.bs-icon {
+}
+
+.btn {
+  --bs-body-bg: #4291ff;
+  font-family: Angkor, serif;
+  background: #4291ff;
+  border-radius: 20px;
+  border: 2px outset var(--bs-red) ;
+  box-shadow: 0px 0px 12px 6px var(--bs-orange);
+  position: relative;
+}
+
+.btn-download {
+  position: static;
+  font-size: 16px;
+}
+
