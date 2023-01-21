@@ -19,42 +19,43 @@ def login_post():
     remember = True if request.form.get('remember') else False
     user = User.query.filter_by(username=username).first()
     print(username, password, flush=True)
+    print(user, flush=True)
     # check if user actually exists
     # take the user supplied password, hash it, and compare it to the hashed password in database
-    if not user or not user.password != password:
+    if not user or not user.password == password:
         flash('Please check your login credentials and try again.')
         return redirect(url_for('auth.login'))  # if user doesn't exist or password is wrong, reload the page
 
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
     flash('You have been logged in.')
-    return redirect(url_for('main.profile'))
+    return redirect(url_for('main.index'))
 
 
-@auth.route('/signup')
-def signup():
-    return render_template('signup.html')
+@auth.route('/register')
+def register():
+    return render_template('register.html')
 
 
-@auth.route('/signup', methods=['POST'])
-def signup_post():
+@auth.route('/register', methods=['POST'])
+def register_post():
+    username = request.form.get('username')
     email = request.form.get('email')
-    name = request.form.get('name')
     password = request.form.get('password')
+    print(username, email, password, flush=True)
+    user = User.query.filter_by(email=email).first()  # if this returns a user, then the email already exists in database
 
-    user = db.query(User).filter_by(email=email).first()  # if this returns a user, then the email already exists in database
-
-    if user:  # if a user is found, we want to redirect back to signup page so user can try again
+    if user:  # if a user is found, we want to redirect back to register page so user can try again
         flash('Email address already exists')
-        return redirect(url_for('auth.signup'))
+        return redirect(url_for('auth.register'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
-    new_user = User(email=email, name=name, password=password)
+    new_user = User(email=email, username=username, password=password)
 
     # add the new user to the database
-    db.add(new_user)
-    db.commit()
-
+    db.session.add(new_user)
+    db.session.commit()
+    print("db add done!", flush=True)
     # code to validate and add user to database goes here
     return redirect(url_for('auth.login'))
 
