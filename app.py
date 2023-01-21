@@ -1,37 +1,41 @@
-# flask for build webpage with index.html in templates folder
-from flask import Flask, render_template, url_for, request, redirect, session, g, Blueprint
-# from flask_bootstrap import Bootstrap
-import sqlite3
+import os
+from flask import Flask
+from flask_login import LoginManager
 
-app = Flask(__name__, static_folder='static')
-# bootstrap = Bootstrap(app)
-@app.route('/', methods = ['GET', 'POST'])
-def index():
-    return render_template('index.html')
+from models import db, User
 
-@app.route('/login', methods = ['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        print(request.form.__dict__, flush=True)
-        print('!', flush=True)
-        # username = request.form['username']
-        # password = request.form['password']
-        # print(username, password)
-        # conn = get_db_connection()
-        # cursor = conn.cursor()
-        # cursor.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password))
-        # user = cursor.fetchone()
-        # if user:
-        #     session['user_id'] = user['id']
-        #     return redirect(url_for('index'))
-        # else:
-        #     return render_template('login.html', error='Invalid username or password')
-    return render_template('login.html')
+# db = SQLAlchemy("sqlite:///db.sqlite")
+# db = SQLAlchemy(os.getenv("DATABASE_URL", "sqlite:///db.sqlite"))  # this connects to a database either on Heroku or on localhost
 
-def get_db_connection():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+
+def create_app():
+    app = Flask(__name__)
+
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SECRET_KEY'] = '9OLWxND4o83j4K4iuopO'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'db.sqlite')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.init_app(app)
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        # since the user_id is just the primary key of our user table, use it in the query for the user
+        return db.query(User).get(int(user_id))
+
+    # blueprint for auth routes in our app
+    from auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
+
+    # blueprint for non-auth parts of app
+    from main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+    return app
+
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True)

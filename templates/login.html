@@ -37,14 +37,34 @@
                     <p class="error"><strong>Error:</strong> {{ error }}
                 {% endif %}
             </form> -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="notification is-danger">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+            {% endwith %}
             <!-- Login form -->
-            <form action="/login" method="post">
-                <input type="text" placeholder="Username" name="username" value="{{
-                  request.form.username }}">
-                 <input type="password" placeholder="Password" name="password" value="{{
-                  request.form.password }}">
-                <input class="btn btn-default" type="submit" value="Login">
-              </form>
+            <form method="POST" action="/login">
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-large" type="username" name="username" placeholder="Your Username" autofocus="">
+                    </div>
+                </div>
+    
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-large" type="password" name="password" placeholder="Your Password">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                        Remember me
+                    </label>
+                </div>
+                <button class="button is-block is-info is-large is-fullwidth">Login</button>
+            </form>
         </div>
     </div>
 {%endblock body%}
