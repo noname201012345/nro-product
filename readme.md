@@ -19,12 +19,12 @@ python -m venv venv
 Với Windows, chạy:
 
 ```
-tutorial-env\Scripts\activate.bat
+venv\Scripts\activate.bat
 ```
 Trên Unix hoặc MacOS:
 
 ```
-source tutorial-env/bin/activate
+source venv/bin/activate
 ```
 
 Sau đó chạy lệnh sau để tải các thư viện cần thiết:
