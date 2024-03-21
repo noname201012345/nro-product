@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{%block title%} 
+Tài Khoản
+{%endblock title %}
+
+{% block body %}
+    <div id="main">
+        <div class="container">
+            {% if current_user.is_authenticated %}
+            <a class="navbar-brand d-flex align-items-center" href="/account">
+                <img class="repos" src="static/img/logo.svg", alt="logo">
+            </a>
+            {% else %}
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img class="repos" src="static/img/logo.svg", alt="logo">
+            </a>
+            {% endif %}
+        <ul class="navbar-nav me-auto">
+		{% if phone %}
+            <li class="nav-item"><a class="nav-link active; reposphone" href="/" style="font-size: 20px;font-family: 'Alfa Slab One', serif;">Trang Chủ</a></li>
+		{% else %}
+            <li class="nav-item"><a class="nav-link active; repos2" href="/" style="font-size: 20px;font-family: 'Alfa Slab One', serif;">Trang Chủ</a></li>
+		{% endif %}
+        </ul>
+		{% if phone %}
+        <div class="bigboxphone text-center">
+            <div class="trans box">
+            {% if current_user.is_authenticated %}
+            <div class="account-info clearfix"> <h2 class="posttitle white"> Thông tin tài khoản </h2> <div class="info-detail"> <div class="group"> <div class="label">Username</div> <div class="detail"> {{user}} </div> </div> <div class="group"> <div class="label">Email</div> <div class="detail"> {{email}} </div> </div> <div class="group"> <div class="label">Số Dư</div> <div class="detail">{{bal}}</div> </div> <div class="group"> <div class="label"></div> <div class="detail"> <form class="btt2" action="/history" method="GET"><button type="submit">Giao Dịch</button></form> <form class="btt" action="/naptien" method="GET"><button type="submit">Nạp Game</button></form>
+                 </div> </div> </div> </div>
+            {% else %}
+            <div class="notification is-danger">
+                <p>Vui Lòng <a href="/login">Đăng Nhập</a> Để Kiểm Tra Tài Khoản!</p>
+            </div>
+            {% endif %}
+            </div>
+            </div>
+		{% else %}
+        <div class="bigbox text-center">
+            <div class="trans box">
+            {% if current_user.is_authenticated %}
+            <div class="account-info clearfix"> <h2 class="posttitle white"> Thông tin tài khoản </h2> <div class="info-detail"> <div class="group"> <div class="label">Username</div> <div class="detail"> {{user}} </div> </div> <div class="group"> <div class="label">Email</div> <div class="detail"> {{email}} </div> </div> <div class="group"> <div class="label">Số Dư</div> <div class="detail">{{bal}}</div> </div> <div class="group"> <div class="label"></div> <div class="detail"> <form class="btt2" action="/history" method="GET"><button type="submit">Giao Dịch</button></form> <form class="btt" action="/naptien" method="GET"><button type="submit">Nạp Game</button></form>
+                 </div> </div> </div> </div>
+            {% else %}
+            <div class="notification is-danger">
+                <p>Vui Lòng <a href="/login">Đăng Nhập</a> Để Kiểm Tra Tài Khoản!</p>
+            </div>
+            {% endif %}
+            </div>
+            </div>
+		{% endif %}
+        </div>
+    </div>
+{%endblock body%}
